@@ -1,5 +1,6 @@
 using ContosoUniversity.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+IServiceScope scope = app.Services.CreateScope();
+IServiceProvider services = scope.ServiceProvider;
+
+UniversityContext context = services.GetRequiredService<UniversityContext>();
+DbInitializer.Initialize(context);
+///////////////////////////////////////////////////////////////////////////////////////
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
